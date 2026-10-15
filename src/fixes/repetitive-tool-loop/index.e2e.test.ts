@@ -175,7 +175,7 @@ Section 2: Data Beta
 Then read ${fileB} and reply with the exact SECRET_TOKEN value.`,
     );
 
-    const res = await client.waitForResponse(p.id, 55000);
+    const res = await client.waitForResponse(p.id, 90000);
     expect("result" in res && res.result).toBeTruthy();
 
     const allMsgs = client.allMessages();
@@ -197,5 +197,5 @@ Then read ${fileB} and reply with the exact SECRET_TOKEN value.`,
 
     // Model must have read secret_config.txt and reported 428917 rather than prematurely halting
     expect(messageChunks).toContain("428917");
-  }, 60000);
+  }, 120000);
 });

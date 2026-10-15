@@ -9,7 +9,6 @@ import { staleMcpEndpointsFix } from "./stale-mcp-endpoints/index.js";
 import { orphanedCheckpointsFix } from "./orphaned-checkpoints/index.js";
 import { droppedHistoryChunksFix } from "./dropped-history-chunks/index.js";
 import { noisyStderrLogsFix } from "./noisy-stderr-logs/index.js";
-import { flattenedModelEffortsFix } from "./flattened-model-efforts/index.js";
 import { nonCanonicalModeIdsFix } from "./non-canonical-mode-ids/index.js";
 import { silentBackgroundTasksFix } from "./silent-background-tasks/index.js";
 import { cancellationLeakFix } from "./cancellation-leak/index.js";
@@ -59,7 +58,6 @@ export function createDefaultFixes(): AcpFix[] {
     orphanedCheckpointsFix,
     droppedHistoryChunksFix,
     noisyStderrLogsFix,
-    flattenedModelEffortsFix,
     nonCanonicalModeIdsFix,
     missingQuestionFallbackFix,
     prematureTurnStopFix,

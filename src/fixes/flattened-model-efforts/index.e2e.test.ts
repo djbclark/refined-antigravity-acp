@@ -11,7 +11,7 @@ describe("flattened-model-efforts e2e", () => {
     }
   });
 
-  it("problem: raw agy returns flattened model IDs and lacks thought_level configuration option", async () => {
+  it("verified: raw agy binary natively provides clean models and thinking_level option in ACP >= 1.4.0", async () => {
     const rawClient = await spawnRawAgy();
     activeClients.push(rawClient);
     await rawClient.initialize();
@@ -19,19 +19,21 @@ describe("flattened-model-efforts e2e", () => {
 
     const configOptions =
       (res.configOptions as Array<{ id?: string; options?: Array<{ value?: string }> }>) ?? [];
-    const hasThoughtLevel = configOptions.some((o) => o.id === "thought_level");
-    expect(hasThoughtLevel).toBe(false);
+    const thinkingOpt = configOptions.find((o) => o.id === "thinking_level");
+    expect(thinkingOpt).toBeDefined();
+    expect(thinkingOpt?.options?.map((o) => o.value)).toEqual(["low", "medium", "high"]);
 
     const modelOpt = configOptions.find((o) => o.id === "model");
+    expect(modelOpt).toBeDefined();
     const hasFlattened = modelOpt?.options?.some(
       (opt) => opt.value?.endsWith("-high") || opt.value?.endsWith("-low"),
     );
-    expect(hasFlattened).toBe(true);
+    expect(hasFlattened).toBe(false);
 
     await rawClient.close();
   });
 
-  it("solution: wrapped connector collapses model list and exposes thought_level option", async () => {
+  it("solution: wrapped connector cleanly passes through native models and thinking_level option", async () => {
     const wrappedClient = await spawnWrapped();
     activeClients.push(wrappedClient);
     await wrappedClient.initialize();
@@ -39,11 +41,12 @@ describe("flattened-model-efforts e2e", () => {
 
     const configOptions =
       (res.configOptions as Array<{ id?: string; options?: Array<{ value?: string }> }>) ?? [];
-    const thoughtOpt = configOptions.find((o) => o.id === "thought_level");
-    expect(thoughtOpt).toBeDefined();
-    expect(thoughtOpt?.options?.map((o) => o.value)).toEqual(["high", "medium", "low"]);
+    const thinkingOpt = configOptions.find((o) => o.id === "thinking_level");
+    expect(thinkingOpt).toBeDefined();
+    expect(thinkingOpt?.options?.map((o) => o.value)).toEqual(["low", "medium", "high"]);
 
     const modelOpt = configOptions.find((o) => o.id === "model");
+    expect(modelOpt).toBeDefined();
     const hasFlattened = modelOpt?.options?.some(
       (opt) => opt.value?.endsWith("-high") || opt.value?.endsWith("-low"),
     );
